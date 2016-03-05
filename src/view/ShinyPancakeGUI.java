@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,15 +30,15 @@ public class ShinyPancakeGUI extends JFrame {
 	 */
 	private JPanel myMainViewPanel;
 	
-	private final HomePanel myHomePanel;
+	public final HomePanel myHomePanel;
 	
-	private final LoginPanel myLoginPanel;
+	public final LoginPanel myLoginPanel;
 	
-	private final SubmitEntryPanel mySubmitEntryPanel;
+	public final SubmitEntryPanel mySubmitEntryPanel;
 	
-	private final RegistrationPanel myRegistrationPanel;
+	public final RegistrationPanel myRegistrationPanel;
 	
-	private final DownloadPanel myDownloadPanel;
+	public final DownloadPanel myDownloadPanel;
 	
 	
 	/**
@@ -47,11 +48,11 @@ public class ShinyPancakeGUI extends JFrame {
 		super();
 		myNavigationBar = new JPanel(new BorderLayout());
 		myHomePanel = new HomePanel();
-		myLoginPanel = new LoginPanel();
 		mySubmitEntryPanel = new SubmitEntryPanel();
 		myRegistrationPanel = new RegistrationPanel();
+		myLoginPanel = new LoginPanel(this);
 		myDownloadPanel = new DownloadPanel();
-		myMainViewPanel = new JPanel();
+		myMainViewPanel = new JPanel(new BorderLayout());
 	}
 	
 	
@@ -74,7 +75,7 @@ public class ShinyPancakeGUI extends JFrame {
 		myNavigationBar.add(leftSection, BorderLayout.WEST);
 		myNavigationBar.add(rightSection, BorderLayout.EAST);
 		
-		myMainViewPanel.add(myHomePanel);
+		myMainViewPanel.add(myHomePanel, BorderLayout.NORTH);
 		
 		add(myMainViewPanel, BorderLayout.CENTER);
 		add(myNavigationBar, BorderLayout.NORTH);
@@ -86,7 +87,8 @@ public class ShinyPancakeGUI extends JFrame {
 	
 	private void resize() {
 		pack();
-		setMinimumSize(getPreferredSize());
+		setPreferredSize(new Dimension(800, 600));
+		//setMinimumSize(getPreferredSize());
 		pack();
 		setLocationRelativeTo(null);
 	}
@@ -105,16 +107,20 @@ public class ShinyPancakeGUI extends JFrame {
 		class MyActionListener implements ActionListener {
 			@Override
 			public void actionPerformed(final ActionEvent theEvent) {
-				myMainViewPanel.removeAll();
-				myMainViewPanel.add(thePanel);
-				myMainViewPanel.revalidate();
-				myMainViewPanel.repaint();
+				switchPanel(thePanel);
 			}
 		}
 		
-		
 		button.addActionListener(new MyActionListener());
 		return button;
+	}
+	
+	
+	public void switchPanel(final JPanel thePanel) {
+		myMainViewPanel.removeAll();
+		myMainViewPanel.add(thePanel, BorderLayout.NORTH);
+		myMainViewPanel.revalidate();
+		myMainViewPanel.repaint();
 	}
 	
 }
