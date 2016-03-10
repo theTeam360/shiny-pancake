@@ -51,7 +51,7 @@ public class ShinyPancakeGUI extends JFrame {
 	public ShinyPancakeGUI() {
 		super();
 		myCurrentUser = "";
-		isLoggedIn = true;//false;
+		isLoggedIn = false;
 		myNavigationBar = new JPanel(new BorderLayout());
 		myHomePanel = new HomePanel();
 		mySubmitEntryPanel = new SubmitEntryPanel(this);

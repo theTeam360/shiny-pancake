@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -11,7 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
+import model.Registration;
 /**
  * The panel for displaying the registration page contents.
  * 
@@ -176,12 +177,22 @@ public class RegistrationPanel extends JPanel implements PanelDisplay {
 		class MyActionListener implements ActionListener {
 			@Override
 			public void actionPerformed(final ActionEvent theEvent) {
+				
 				boolean isUsernameAvailable = false;
 				
-				// LOGIC HERE FOR REGISTERING/SUBMITTING USER INFO TO DATABASE
-				// 
-				// - Justin
+				/*
+				 * ***********************************************************
+				 * 	Bill Sylvia
+				 * ***********************************************************
+				 */
 				
+				try {
+					isUsernameAvailable = !Registration.userExists(myUsernameText.getText(),null);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
 				if(myUsernameText.getText().length() < 4) {
 					myErrorLabel2.setText("Username needs to be at least 4 characters long");
 				} else if(!isUsernameAvailable) {
@@ -195,7 +206,19 @@ public class RegistrationPanel extends JPanel implements PanelDisplay {
 				} else {
 					myGUI.myLoginPanel.resetFields();
 					myGUI.switchPanel(myGUI.myLoginPanel);
+					try {
+						Registration.add(myUsernameText.getText(), myPasswordText.getText(), myFirstNameText.getText(), 
+										myLastNameText.getText(), myAgeText.getText(), myEmailText.getText(), myPhoneText.getText(), "");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
+				/*
+				 * ***********************************************************
+				 * 	Bill Sylvia
+				 * ***********************************************************
+				 */
 			}
 		}
 		button.addActionListener(new MyActionListener());

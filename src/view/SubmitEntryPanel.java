@@ -140,14 +140,34 @@ public class SubmitEntryPanel extends JPanel implements PanelDisplay {
 			@Override
 			public void actionPerformed(final ActionEvent theEvent) {
 				if (isImageLoaded) {
-
-					// LOGIC HERE FOR SAVING SUBMISSIONS TO DATABASE
-					// - Justin
-
-					// myFile is the file that was uploaded.
-					// myImage is the loaded image if needed.
-					// myGUI.myCurrentUser is the username string.
-					// hasConsent.isSelected() will check if they checked the box.
+					/*
+					 * ***********************************************************
+					 * 	Bill Sylvia
+					 * ***********************************************************
+					 */
+					File fileName = null;
+					 try {
+						 if (hasConsent.isSelected()) {
+							 fileName = new File("./img_upload/" + System.currentTimeMillis() +
+					        		 "_" + myGUI.myCurrentUser + ".png");
+						 } else {
+							 fileName = new File("./img_upload/" + System.currentTimeMillis() + ".png");
+						 }
+						ImageIO.write(myImage, 
+						         "png",
+						         fileName);
+						isImageLoaded = false;
+						myIcon.setIcon(null);
+						myErrorLabel.setText("Your Image was successfully uploaded!\n Thank you for your participation!");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					/*
+					* ***********************************************************
+					* 	Bill Sylvia
+					* ***********************************************************
+					*/
 
 				} else {
 					myErrorLabel.setText("Image file was not loaded");

@@ -4,13 +4,17 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import model.Registration;
 
 /**
  * The page that takes an input of log in credentials and checks them with
@@ -130,6 +134,20 @@ public class LoginPanel extends JPanel implements PanelDisplay {
 				// myUsernameText.getText() is what you want to use
 				// myPasswordText.getText()
 				
+				/*
+				 * ***********************************************************
+				 * 	Bill Sylvia
+				 * ***********************************************************
+				 */
+				try {
+					// Checks if username and password used are correct.
+					isLoggedIn = Registration.userExists(myUsernameText.getText(), myPasswordText.getText());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
 				if (isLoggedIn) {
 					myGUI.logIn(myUsernameText.getText());
 					myGUI.switchPanel(thePanel);
@@ -154,13 +172,47 @@ public class LoginPanel extends JPanel implements PanelDisplay {
 		final JButton button = new JButton(theStr);
 		
 		class MyActionListener implements ActionListener {
-			@Override
+			/*
+			 * ***********************************************************
+			 * 	Bill Sylvia
+			 * ***********************************************************
+			 */
+			String email;
 			public void actionPerformed(final ActionEvent theEvent) {
-				
-				// CURRENTLY JUST NAVIGATES BACK TO HOME PAGE. DOES NOTHING SPECIAL
-				// - Justin
-				
-				myGUI.switchPanel(thePanel);
+				if(myUsernameText.getText().equals("")) {
+		        	JOptionPane.showMessageDialog(
+		        		    null, "Please enter your username.",
+		        		    "Error",
+		        		    JOptionPane.ERROR_MESSAGE);
+				} else {
+					try {
+						email = Registration.findEmail(myUsernameText.getText());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					if (email.equals("0")) {
+			        	JOptionPane.showMessageDialog(
+			        		    null, myUsernameText.getText() + " is not a registered user.",
+			        		    "Error",
+			        		    JOptionPane.ERROR_MESSAGE);
+					} else if (email.equals("-1")) {
+			        	JOptionPane.showMessageDialog(
+			        		    null, myUsernameText.getText() + " does not have an associated email address.",
+			        		    "Error",
+			        		    JOptionPane.ERROR_MESSAGE);
+					} else {
+			        	JOptionPane.showMessageDialog(
+			        		    null, "An email will be sent to " + email + " shortly.\n(Not really but we are pretending)");
+						myGUI.switchPanel(thePanel);
+					}
+				}
+				/*
+				 * ***********************************************************
+				 * 	Bill Sylvia
+				 * ***********************************************************
+				 */
 			}
 		}
 		button.addActionListener(new MyActionListener());
@@ -184,7 +236,9 @@ public class LoginPanel extends JPanel implements PanelDisplay {
 				myGUI.switchPanel(thePanel);
 			}
 		}
-		button.addActionListener(new MyActionListener());
+		button.addActionListener(new MyActionListener(){
+
+		});
 		return button;
 	}
 	

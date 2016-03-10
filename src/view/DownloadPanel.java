@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -18,7 +19,7 @@ import javax.swing.JPanel;
 /**
  * Basic foundation for download page.
  * 
- * @author Justin Arnett
+ * @author Justin Arnett & Bill Sylvia
  * @version 4 March 2016
  */
 @SuppressWarnings("serial")
@@ -26,13 +27,12 @@ public class DownloadPanel extends JPanel implements PanelDisplay {
 
 	private ShinyPancakeGUI myGUI;
 	private String myDirectory;
-	private File myFile;
 	
 	
 	public DownloadPanel(ShinyPancakeGUI theGUI) {
 		super();
 		myGUI = theGUI;
-		myDirectory = (".");
+		myDirectory = ("C:\\Users\\" + System.getProperty("user.name") + "\\Downloads"); // Bill Sylvia
 		buildPanel();
 	}
 	
@@ -47,19 +47,40 @@ public class DownloadPanel extends JPanel implements PanelDisplay {
 		// already here to copy so it would be easy.
 		// - Justin
 		
-		Image img = new ImageIcon(this.getClass().getResource("/yoshi.png")).getImage();
 		
-		JButton yoshiButton = createButton("/yoshi.png", img);
 		
-		img = img.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-		yoshiButton.setIcon(new ImageIcon(img));
-		yoshiButton.setMaximumSize(new Dimension(100, 100));
+		/*
+		 * ***********************************************************
+		 * 	Bill Sylvia
+		 * ***********************************************************
+		 */
+		File folder = new File("./img_download");
+		File[] imgNames = folder.listFiles();
+		ArrayList<Image> imgs = new ArrayList<Image>();
+		ArrayList<JButton> myButtons = new ArrayList<JButton>();
 		
-		this.add(yoshiButton);
+		for (int i = 0; i < imgNames.length; i++) {
+			imgs.add(new ImageIcon(imgNames[i].getAbsolutePath()).getImage());
+		}
 		
+		for(int i = 0; i < imgNames.length; i++) {
+			myButtons.add(createButton(imgNames[i].getAbsolutePath(), imgs.get(i)));
+		}
+		
+		for(int i = 0; i < imgNames.length; i++) {
+			imgs.set(i,imgs.get(i).getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+			myButtons.get(i).setIcon(new ImageIcon(imgs.get(i)));
+			myButtons.get(i).setMaximumSize(new Dimension(100, 100));
+		}
+		for(int i = 0; i < imgNames.length; i++) {
+			this.add(myButtons.get(i));
+		}
+		/*
+		 * ***********************************************************
+		 * 	Bill Sylvia
+		 * ***********************************************************
+		 */
 	}
-
-	
 	
 	@Override
 	public void resetFields() {
@@ -83,10 +104,11 @@ public class DownloadPanel extends JPanel implements PanelDisplay {
 		class MyActionListener implements ActionListener {
 			@Override
 			public void actionPerformed(final ActionEvent theEvent) {
-				final JFileChooser fileChooser = new JFileChooser(myDirectory);
+				final JFileChooser fileChooser = new JFileChooser(new File(myDirectory));
 				File fileDes = new File(thePath);
 				
 				fileChooser.setSelectedFile(fileDes);
+				fileChooser.setCurrentDirectory(new File(myDirectory)); // Bill Sylvia
 				final int result = fileChooser.showSaveDialog((((JPanel) myGUI.mySubmitEntryPanel).getParent()));
 				if (result == JFileChooser.APPROVE_OPTION) {
 					fileDes = fileChooser.getSelectedFile();
