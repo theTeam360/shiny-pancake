@@ -58,7 +58,7 @@ public class Registration {
         }
         if (userExists(UN, null)) {
         	JOptionPane.showMessageDialog(
-        		    null, "Your Already Registered",
+        		    null, "You're Already Registered",
         		    "Registration error",
         		    JOptionPane.ERROR_MESSAGE);
         	
@@ -67,7 +67,7 @@ public class Registration {
 			    String filename= "./src/model/RegData.txt";
 			    File myFile = new File(filename);
 			    FileWriter fw = new FileWriter(myFile,true); //the true will append the new data
-			    fw.write(UN + "," + PW + "," + FN + "," + LN + "," + age + "," + email + "," + phone + "," + address + "\n");//appends the string to the file
+			    fw.write(UN.toLowerCase() + "," + PW + "," + FN + "," + LN + "," + age + "," + email + "," + phone + "," + address + "\n");//appends the string to the file
 			    fw.close();
 			    result = 0;
 
@@ -114,7 +114,7 @@ public class Registration {
             }
         }   
 
-        bufferedReader.close();         
+        bufferedReader.close();
    
 		return found;
 	}
@@ -140,11 +140,9 @@ public class Registration {
             
         while((line = bufferedReader.readLine()) != null) {
         	userName = line.split(",");
-            if (userName[0].equals(un)) {
+            if (userName[0].toLowerCase().equals(un.toLowerCase())) {
             	
-            	if(userName.length < 3) {
-            		email = "-1";
-                } else if(userName[5].equals(" ")){
+            	if(userName[5].equals(" ")){
             		email = "-1";
                 } else {
                 	email = userName[5];
@@ -152,7 +150,6 @@ public class Registration {
                 break;
             }
         }   
-            
             
         bufferedReader.close();  
 		return email;
